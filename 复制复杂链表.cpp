@@ -6,68 +6,50 @@
 */
 
 /*
-struct RandomListNode {
-    int label;
-    struct RandomListNode *next, *random;
-    RandomListNode(int x) :
-            label(x), next(NULL), random(NULL) {
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
     }
-};
-*/
+};*/
 class Solution {
 public:
-    RandomListNode* Clone(RandomListNode* pHead)
-    {
-        map<RandomListNode*, int> addr2Index;
-        addr2Index[nullptr] = -1;
-        int index = 0;
-        for (RandomListNode *pNode = pHead; 
-             pNode != nullptr;
-             pNode = pNode->next, index++) {
-            addr2Index[pNode] = index;
+    vector<vector<int> > FindPath(TreeNode* root,int expectedNumber) {
+        vector<vector<int> > paths;
+        
+        if (root == nullptr) {
+            return paths;
         }
         
-        map<int, int>index2Index;
-        index = 0;
-        for (RandomListNode *pNode = pHead; 
-             pNode != nullptr;
-             pNode = pNode->next, index++) {
-            index2Index[index] = addr2Index[pNode->random];
-        }
+        vector<int> path;
+        FindPath(root, expectedNumber, path, paths);
+        
+        stable_sort(paths.begin(), paths.end(), [](auto path1, auto path2){
+            return path1.size() >= path2.size();
+        });
+        
+        return paths;
+    }
+    
+    void FindPath(TreeNode* root, int expectedNumber, vector<int>& path, vector<vector<int> >& paths) {
+        path.push_back(root->val);
+        if (root->left == nullptr && root->right == nullptr) {
+            if (accumulate(path.begin(), path.end(), 0) == expectedNumber) {
+                paths.push_back(path);
+            }
+        } else {
+            if (root->left) {
+                FindPath(root->left, expectedNumber, path, paths);
+            }
 
-        RandomListNode *pNewHead = nullptr;
-        RandomListNode *pNewTail = nullptr;
-        index = 0;
-        for (RandomListNode *pNode = pHead; 
-             pNode != nullptr;
-             pNode = pNode->next, index++) {
-            RandomListNode *pNewNode = new RandomListNode(pNode->label);
-            if (pNewTail == nullptr) {
-                pNewHead = pNewNode;
-                pNewTail = pNewNode;
-            } else {
-                pNewTail->next = pNewNode;
-                pNewTail = pNewNode;
+            if (root->right) {
+                FindPath(root->right, expectedNumber, path, paths);
             }
         }
         
-        map<int, RandomListNode*> index2Addr;
-        index2Addr[-1] = nullptr;
-        index = 0;
-        for (RandomListNode *pNode = pNewHead; 
-             pNode != nullptr;
-             pNode = pNode->next, index++) {
-            index2Addr[index] = pNode;
-        }
-        
-        index = 0;
-        for (RandomListNode *pNode = pNewHead; 
-             pNode != nullptr;
-             pNode = pNode->next, index++) {
-            pNode->random = index2Addr[index2Index[index]];
-        }
-        
-        return pNewHead;
+        path.pop_back();
     }
-        
+    
 };

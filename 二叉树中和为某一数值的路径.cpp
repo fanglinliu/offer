@@ -12,10 +12,6 @@ public:
     vector<vector<int> > FindPath(TreeNode* root,int expectedNumber) {
         vector<vector<int> > paths;
         
-        if (root == nullptr) {
-            return paths;
-        }
-        
         vector<int> path;
         FindPath(root, expectedNumber, path, paths);
         
@@ -26,23 +22,22 @@ public:
         return paths;
     }
     
-    void FindPath(TreeNode* root, int expectedNumber, vector<int> path, vector<vector<int> >& paths) {
+    void FindPath(TreeNode* root, int expectedNumber, vector<int>& path, vector<vector<int> >& paths) {
+        if (root == nullptr) {
+            return;
+        }
+        
         path.push_back(root->val);
         if (root->left == nullptr && root->right == nullptr) {
             if (accumulate(path.begin(), path.end(), 0) == expectedNumber) {
                 paths.push_back(path);
             }
-            
-            return;
-        }
-        
-        if (root->left) {
+        } else {
             FindPath(root->left, expectedNumber, path, paths);
-        }
-        
-        if (root->right) {
             FindPath(root->right, expectedNumber, path, paths);
         }
+        
+        path.pop_back();
     }
     
 };

@@ -24,33 +24,32 @@ public:
             return nullptr;
         }
         
-        TreeNode *headNode = nullptr, *tailNode = nullptr;
-        Convert(pRootOfTree, &headNode, &tailNode);
+        TreeNode *tailNode = nullptr;
+        Convert(pRootOfTree, tailNode);
+        
+        TreeNode *headNode = tailNode;
+        while (headNode->left) {
+            headNode = headNode->left;
+        }
+        
         return headNode;
     }
     
-    void Convert(TreeNode* pNode, TreeNode **headNode, TreeNode **tailNode)
+    void Convert(TreeNode* pNode, TreeNode *& tailNode)
     {
-        if (pNode->left == nullptr) {
-            *headNode = pNode;
-        } else {
-            TreeNode *leftHeadNode = nullptr, *leftTailNode = nullptr;
-            Convert(pNode->left, &leftHeadNode, &leftTailNode);
-            leftTailNode->right = pNode;
-            pNode->left = leftTailNode;
-            *headNode = leftHeadNode;
+        if (pNode->left) {
+            Convert(pNode->left, tailNode);
         }
         
-        if (pNode->right == nullptr) {
-            *tailNode = pNode;
-        } else {
-            TreeNode *rightHeadNode = nullptr, *rightTailNode = nullptr;
-            Convert(pNode->right, &rightHeadNode, &rightTailNode);
-            rightHeadNode->left = pNode;
-            pNode->right = rightHeadNode;
-            
-            *tailNode = rightTailNode;
-        }        
+        if (tailNode) {
+            tailNode->right = pNode;
+        }
+        pNode->left = tailNode;
+        tailNode = pNode;
+        
+        if (pNode->right) {
+            Convert(pNode->right, tailNode);
+        }
     }
 
 };

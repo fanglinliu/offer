@@ -24,32 +24,28 @@ public:
             return nullptr;
         }
         
-        TreeNode *tailNode = nullptr;
-        Convert(pRootOfTree, tailNode);
+        TreeNode *pHeadNode = nullptr;
+        Convert(pRootOfTree, pHeadNode);
         
-        TreeNode *headNode = tailNode;
-        while (headNode->left) {
-            headNode = headNode->left;
-        }
-        
-        return headNode;
+        return pHeadNode;
     }
     
-    void Convert(TreeNode* pNode, TreeNode *& tailNode)
+    void Convert(TreeNode* pNode, TreeNode *& pHeadNode)
     {
-        if (pNode->left) {
-            Convert(pNode->left, tailNode);
-        }
-        
-        if (tailNode) {
-            tailNode->right = pNode;
-        }
-        pNode->left = tailNode;
-        tailNode = pNode;
-        
         if (pNode->right) {
-            Convert(pNode->right, tailNode);
+            Convert(pNode->right, pHeadNode);
         }
+        
+        pNode->right = pHeadNode;
+        if (pHeadNode) {
+            pHeadNode->left = pNode;
+        }
+        pHeadNode = pNode;
+        
+        if (pNode->left) {
+            Convert(pNode->left, pHeadNode);
+        }
+        
     }
 
 };

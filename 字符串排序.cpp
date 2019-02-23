@@ -6,24 +6,45 @@
 */
 
 
+
 class Solution {
 public:
-    vector<string> Permutation(string str) {
-        sort(str.begin(), str.end());
-        int count = str.size();
-        for (int i = str.size() - 1; i >= 1 ; i--) {
-            count *= i;
+    vector<string> Permutation(string str) {        
+        if (str.empty()) {
+            return vector<string>();
         }
         
+        sort(str.begin(), str.end());
         vector<string> result;
-        
-        for (int i = 0; i < count; i++) {
-            if (find(result.begin(), result.end(), str) == result.end()) {
-                result.push_back(str);
-            }
-            next_permutation(str.begin(), str.end());
+        result.push_back(str);
+        while(next_permutation(str)) {
+            result.push_back(str);
         }
         
         return result;
     }
+    
+    bool next_permutation(string &str) {
+        reverse(str.begin(), str.end());
+        auto it = adjacent_find(str.begin(), str.end(), [](auto c1, auto c2){
+            return c1 > c2;
+        });
+        
+        if (it == str.end()) {
+            return false;
+        }
+        
+        it++;
+        
+        auto it2 = find_if(str.begin(), it, [=](auto c){
+            return c > *it;
+        });
+        
+        swap(*it2, *it);
+        reverse(str.begin(), it);
+        reverse(str.begin(), str.end());
+        
+        return true;
+    }
 };
+

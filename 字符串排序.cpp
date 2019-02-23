@@ -25,24 +25,24 @@ public:
     }
     
     bool next_permutation(string &str) {
-        reverse(str.begin(), str.end());
-        auto it = adjacent_find(str.begin(), str.end(), [](auto c1, auto c2){
+       // reverse(str.begin(), str.end());
+        auto it = adjacent_find(str.rbegin(), str.rend(), [](auto c1, auto c2){
             return c1 > c2;
         });
         
-        if (it == str.end()) {
+        if (it == str.rend()) {
             return false;
         }
         
         it++;
         
-        auto it2 = find_if(str.begin(), it, [=](auto c){
+        auto it2 = find_if(str.rbegin(), it, [=](auto c){
             return c > *it;
         });
         
         swap(*it2, *it);
-        reverse(str.begin(), it);
-        reverse(str.begin(), str.end());
+        reverse(str.rbegin(), it);
+        //reverse(str.begin(), str.end());
         
         return true;
     }

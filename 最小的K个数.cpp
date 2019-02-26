@@ -11,7 +11,20 @@ public:
             return vector<int>();
         }
         
-        nth_element(input.begin(), input.begin() + k, input.end());
-        return vector<int>(input.begin(), input.begin() + k);
+        priority_queue<int> queue;
+        for (int i = 0; i < input.size(); ++i)
+        {
+        	if (i < k)
+        	{
+	        	queue.push(input[i]);
+        	} else {
+        		if (input[i] < queue.top())
+        		{
+        			queue.pop();
+        			queue.push(input[i]);
+        		}
+        	}
+        }
+        return vector<int>(queue.begin(), queue.end());
     }
 };

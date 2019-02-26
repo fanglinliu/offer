@@ -11,20 +11,25 @@ HZ偶尔会拿些专业问题来忽悠那些非计算机专业的同学。今天
 class Solution {
 public:
     int FindGreatestSumOfSubArray(vector<int> array) {
-        int maxSum = array[0];
-        int fn = array[0];
-        for (int i = 1; i < array.size(); i++) {
-            int fn_1 = fn;
-            if (fn > 0) {
-                fn = fn + array[i];
-            } else {
-                fn = array[i];
-            }
-            
-            maxSum = max(maxSum, fn);
+        if (array.empty()) {
+            return 0;
         }
         
-        return maxSum;
+        int max_sum_i = array[0];
+        int max_sum = max_sum_i;
+        for (int i = 1; i < array.size(); i++) {
+            if (max_sum_i > 0) {
+                max_sum_i += array[i];
+            } else {
+                max_sum_i = array[i];
+            }
+            
+            if (max_sum_i > max_sum) {
+                max_sum = max_sum_i;
+            }
+        }
+        
+        return max_sum;
     }
     
 };

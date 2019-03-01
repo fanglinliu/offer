@@ -9,19 +9,18 @@
 class Solution {
 public:
     int FirstNotRepeatingChar(string str) {
-        int counts[256] = {0};
-        for_each(str.begin(), str.end(), [&](char c){
-            counts[c]++;
-        });
-        
-        auto it = find_if(str.begin(), str.end(), [&](char c) {
-            return counts[c] == 1;
-        });
-        
-        if (it == str.end()) {
-            return -1;
-        } else {
-            return it - str.begin();
+        const auto length = 256;
+        char count[length] = {0};
+        for (auto c: str) {
+            count[c]++;
         }
+        
+        for (int i = 0; i < str.size(); i++) {
+            if (count[str[i]] == 1) {
+                return i;
+            }
+        }
+        
+        return -1;
     }
 };

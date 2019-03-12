@@ -16,34 +16,55 @@
 
 #include <cassert>
 
+/***
+
+滑动窗口的最大值
+
+*/
+
+#include <cassert>
+
 class Solution {
 public:
     vector<int> maxInWindows(const vector<int>& num, unsigned int size)
     {
-        vector<int> result;
+        if (size <= 0) {
+            return {};
+        }
+        
         if (num.size() < size) {
-            return result;
+            return {};
         }
         
-        if (size <= 0 || num.size() <= 0) {
-            return result;
-        }
-        
-        //assert(num.size() >= size);
-        //assert(num.size() >= 0);
-        //assert(size >= 0);
-        
-        //priority_queue<int> pq(num.begin(), num.begin() + size);
-       
-        priority_queue<int> pq;
-        for (int i = 0; i < num.size(); i++) {
-            pq.push(num[i]);
-            if (i >= size) {
-                result.push_back(pq.top());
-                pq.pop();
+        maxNumIndex.push_front(size - 1);
+        for (int i = size - 2; i >= 0; i--) {
+            if (num[i] > num[maxNumIndex.front()]) {
+                maxNumIndex.push_front(i);
             }
+        } 
+        
+        vector<int> result;
+        result.push_back(num[maxNumIndex.front()]);
+        
+        for (int i = size; i < num.size(); i++) {
+            int winBegin = i - size + 1;
+            int winEnd = i;
+            if (!maxNumIndex.empty() && maxNumIndex.front() < winBegin) {
+                maxNumIndex.pop_front();
+            }
+            
+            while (!maxNumIndex.empty() && num[maxNumIndex.back()] <= num[i]) {
+                maxNumIndex.pop_back();
+            }
+            maxNumIndex.push_back(i);
+            result.push_back(num[maxNumIndex.front()]);
         }
+        
         
         return result;
     }
+    
+private:
+    
+    deque<int> maxNumIndex;
 };
